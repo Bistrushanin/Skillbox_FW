@@ -2,8 +2,6 @@ import psycopg2  # Библиотека для работы с PostgreSQL
 import json  # Библиотека для работы с JSON
 import os  # Модуль для работы с файловой системой
 
-#from pathlib import Path
-
 
 def read_json_files_in_folder(folder_path):
     # Получение списка JSON файлов в указанной папке
@@ -32,7 +30,6 @@ def insert_data_into_table(connection, cursor, table_name, data):
     for file, json_data in data.items():
         if not json_data:
             continue  # Пропустить JSON-файлы без данных
-        # print(json_data)
 
         # Получение список всех столбцов в таблице
         cursor.execute(f"SELECT column_name FROM information_schema.columns WHERE table_name = '{table_name}';")
@@ -112,7 +109,7 @@ from airflow.operators.python_operator import PythonOperator
 
 default_args = {
     'owner': 'Aleksey',
-    'start_date': datetime(2023, 12, 21),
+    'start_date': datetime(2023, 12, 28),
     'retries': 1,
     'retry_delay': timedelta(minutes=3),
 }
@@ -121,7 +118,8 @@ dag = DAG(
     'uploading_data_from_json',
     default_args=default_args,
     description='Reading_distributing_anduploading_data_from_json_to_Postgresql',
-    schedule_interval=timedelta(minutes=3),
+    #schedule_interval=timedelta(minutes=3),
+    schedule_interval='@once',
 )
 
 # Задача для чтения данных из JSON файлов
